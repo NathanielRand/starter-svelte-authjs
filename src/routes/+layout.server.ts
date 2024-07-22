@@ -1,7 +1,10 @@
-import type { LayoutServerLoad } from "./$types"
+import type { PageServerLoad } from "./$types"
+import { redirect } from '@sveltejs/kit';
  
-export const load: LayoutServerLoad = async (event) => {
-  const session = await event.locals.auth()
+export const load: PageServerLoad = async (events) => {
+  const session = await events.locals.auth()
+
+  if (!session?.user) throw redirect(303, '/auth/signin');
  
   return {
     session,
